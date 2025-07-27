@@ -45,6 +45,10 @@ public class UIManager : Single<UIManager>
                     break;
             }
         }
+        else
+        {
+            Log($"ShowUI {uIData.Type} GetUI is null");
+        }
     }
 
     public void HideUI(UIData uIData)
@@ -73,6 +77,7 @@ public class UIManager : Single<UIManager>
             GameObject gameObject = InstantiateUI(uIData);
             if (null != gameObject)
             {
+                gameObject.name = uIData.Type.ToString();
                 uIBase = gameObject.GetComponent<UIBase>();
                 if(null != uIBase)
                 {
@@ -107,10 +112,10 @@ public class UIManager : Single<UIManager>
         return null;
     }
 
+    #region 处理层级和Mask遮罩
     private void ShowResidentUI(ResidentUIBase ui)
     {
         ui.transform.SetAsLastSibling();
-        //ui.transform.localPosition = Vector3.zero;
     }
     private void ShowCommonUI(CommonUIBase ui)
     {
@@ -123,5 +128,25 @@ public class UIManager : Single<UIManager>
     private void ShowTipsUI(TipsUIBase ui)
     {
         ui.transform.SetAsLastSibling();
+    }
+
+    private void HideResidentUI(ResidentUIBase ui)
+    {
+    }
+    private void HideCommonUI(CommonUIBase ui)
+    {
+    }
+    private void HidePopupUI(PopupUIBase ui)
+    {
+    }
+    private void HideTipsUI(TipsUIBase ui)
+    {
+    }
+    
+    #endregion
+
+    private void Log(string msg)
+    {
+        DebugEr.Log($"UIManegr >> {msg}");
     }
 }

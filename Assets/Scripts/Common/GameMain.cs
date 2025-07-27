@@ -20,7 +20,7 @@ public class GameMain : MonoBehaviour
     private void InitManger()
     {
         UIManager.Sing.Init();
-        CardManager.Sing.Init();
+        //CardManager.Sing.Init(); // 游戏系统 
     }
     
 
