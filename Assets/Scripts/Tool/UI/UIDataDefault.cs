@@ -14,11 +14,35 @@ public enum eUIHierarchy
 }
 
 /// <summary>
+/// PopupMask透明模式
+/// </summary>
+public enum ePopupMaskType
+{
+    Translucence,   // 半透明
+    AllBlack,       // 全黑
+    FullyTranslucence, // 全透明
+}
+
+/// <summary>
+/// PopupMask点击功能
+/// </summary>
+public enum ePopupMaskClickFun
+{
+    Mask,   // 无功能，不可穿透
+    None,   // 无功能，可穿透
+    Close,  // 关闭当前界面
+}
+
+/// <summary>
 /// UI枚举
 /// </summary>
 public enum eUIType
 {
     MainUI,
+    RoleUI,
+    RoleInfoUI,
+    LevelUI,
+    LevelPlayUI,
 }
 
 public struct UIData
@@ -40,4 +64,8 @@ public struct UIData
 public static class UIDataDefault
 {
     public static UIData MainUI = new UIData(eUIType.MainUI, eUIHierarchy.Resident, "MianUI", "Prefab/UI/MainUI");
+    public static UIData RoleUI = new UIData(eUIType.RoleUI, eUIHierarchy.Common, "RoleUI", "Prefab/UI/Role/RoleUI");
+    public static UIData RoleInfoUI = new UIData(eUIType.RoleInfoUI, eUIHierarchy.Popup, "RoleInfoUI", "Prefab/UI/Role/RoleInfoUI");
+    public static UIData LevelUI = new UIData(eUIType.LevelUI, eUIHierarchy.Common, "LevelUI", "Prefab/UI/Level/LevelUI");
+    public static UIData LevelPlayUI = new UIData(eUIType.LevelPlayUI, eUIHierarchy.Popup, "LevelPlayUI", "Prefab/UI/Level/LevelPlayUI");
 }

@@ -25,4 +25,43 @@ public static class TransformEx
             }
         }
     }
+
+    public static T FindComponent<T>(this Transform tran, string path = "") where T : Component
+    {
+        if (tran != null)
+        {
+            Transform componentTran = tran;
+            if (string.IsNullOrEmpty(path))
+            {
+                componentTran = tran.Find(path);
+            }
+
+            if (componentTran != null)
+            {
+                return componentTran.GetComponent<T>();
+            }
+        }
+        string tranName = tran == null ? "NULL" : tran.name;
+        DebugEr.LogError($"FindComponent not Find Component Path = {path} tran = {tranName}");
+        return null;
+    }
+    public static T FindComponent<T>(this GameObject obj, string path = "") where T : Component
+    {
+        if (obj != null)
+        {
+            Transform componentTran = obj.transform;
+            if (string.IsNullOrEmpty(path))
+            {
+                componentTran = obj.transform.Find(path);
+            }
+
+            if (componentTran != null)
+            {
+                return componentTran.GetComponent<T>();
+            }
+        }
+        string tranName = obj == null ? "NULL" : obj.name;
+        DebugEr.LogError($"FindComponent not Find Component Path = {path} tran = {tranName}");
+        return null;
+    }
 }

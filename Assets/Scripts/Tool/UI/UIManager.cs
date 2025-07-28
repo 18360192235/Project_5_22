@@ -12,6 +12,9 @@ public class UIManager : Single<UIManager>
 
     // 弹窗栈
     private Stack<UIBase> PopupUIStack = new Stack<UIBase>();
+    
+    // 弹窗Mask 
+    private PopupMask _popupMask;
 
 #region 对外接口
     
@@ -22,6 +25,11 @@ public class UIManager : Single<UIManager>
     /// <param name="data"></param>
     public void ShowUI(UIData uIData, params object[] data)
     {
+        if (ShowUIList.ContainsKey(uIData.Type))
+        {
+            Log($"{uIData.Type} UI已经打开了");
+        }
+        
         UIBase ui = GetUI(uIData);
         if (null != ui)
         {
@@ -44,6 +52,8 @@ public class UIManager : Single<UIManager>
                     if (tipsUI != null) ShowTipsUI(tipsUI);
                     break;
             }
+            ShowUIList.Add(uIData.Type, ui);
+            ui.transform.SetAsLastSibling();
         }
         else
         {
@@ -77,7 +87,7 @@ public class UIManager : Single<UIManager>
             GameObject gameObject = InstantiateUI(uIData);
             if (null != gameObject)
             {
-                gameObject.name = uIData.Type.ToString();
+                gameObject.name = uIData.Name;
                 uIBase = gameObject.GetComponent<UIBase>();
                 if(null != uIBase)
                 {
@@ -89,6 +99,11 @@ public class UIManager : Single<UIManager>
         return uIBase;
     }
 
+    /// <summary>
+    /// 实例化UI界面
+    /// </summary>
+    /// <param name="uIData"></param>
+    /// <returns></returns>
     private GameObject InstantiateUI(UIData uIData)
     {
         Transform panel = null;
@@ -112,22 +127,43 @@ public class UIManager : Single<UIManager>
         return null;
     }
 
+    /// <summary>
+    /// 点击弹窗遮罩
+    /// </summary>
+    /// <param name="clickFun"></param>
+    public void ClickPopupMask(ePopupMaskClickFun clickFun)
+    {
+        switch (clickFun)
+        {
+            case ePopupMaskClickFun.Close:
+            {
+                break;
+            }
+            case ePopupMaskClickFun.Mask:
+            {
+                break;
+            }
+            case ePopupMaskClickFun.None:
+            {
+                DebugEr.Log("UIManager ClickPopupMask 异常 点击类型异常");
+                break;
+            }
+        }
+    }
+
     #region 处理层级和Mask遮罩
     private void ShowResidentUI(ResidentUIBase ui)
     {
-        ui.transform.SetAsLastSibling();
     }
     private void ShowCommonUI(CommonUIBase ui)
     {
-        ui.transform.SetAsLastSibling();
     }
     private void ShowPopupUI(PopupUIBase ui)
     {
-        ui.transform.SetAsLastSibling();
+        GetPopupMask().Show(ui.MaskType,ui.MaskClickFun);
     }
     private void ShowTipsUI(TipsUIBase ui)
     {
-        ui.transform.SetAsLastSibling();
     }
 
     private void HideResidentUI(ResidentUIBase ui)
@@ -145,6 +181,16 @@ public class UIManager : Single<UIManager>
     
     #endregion
 
+    private PopupMask GetPopupMask()
+    {
+        if (null == _popupMask)
+        {
+            GameObject maskObj = GameObject.Instantiate(Resources.Load<GameObject>("Prefab/UI/PopupMask"), GameMain.instance.m_popup);
+            maskObj.name = "PopupMask";
+            _popupMask =  maskObj.GetComponent<PopupMask>();
+        }
+        return _popupMask;
+    }
     private void Log(string msg)
     {
         DebugEr.Log($"UIManegr >> {msg}");
