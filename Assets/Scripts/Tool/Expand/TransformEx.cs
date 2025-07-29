@@ -31,7 +31,7 @@ public static class TransformEx
         if (tran != null)
         {
             Transform componentTran = tran;
-            if (string.IsNullOrEmpty(path))
+            if (!string.IsNullOrEmpty(path))
             {
                 componentTran = tran.Find(path);
             }
@@ -50,7 +50,7 @@ public static class TransformEx
         if (obj != null)
         {
             Transform componentTran = obj.transform;
-            if (string.IsNullOrEmpty(path))
+            if (!string.IsNullOrEmpty(path))
             {
                 componentTran = obj.transform.Find(path);
             }

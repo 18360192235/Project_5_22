@@ -34,6 +34,15 @@ public enum ePopupMaskClickFun
 }
 
 /// <summary>
+/// PopupUI模式 
+/// </summary>
+public enum ePopupUIPattern
+{
+    Sole, // 关闭上一层UI
+    More, // 不处理
+}
+
+/// <summary>
 /// UI枚举
 /// </summary>
 public enum eUIType

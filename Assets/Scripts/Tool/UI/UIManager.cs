@@ -10,8 +10,8 @@ public class UIManager : Single<UIManager>
     // 显示UI列表
     private Dictionary<eUIType,UIBase> ShowUIList = new Dictionary<eUIType, UIBase>();
 
-    // 弹窗栈
-    private Stack<UIBase> PopupUIStack = new Stack<UIBase>();
+    // popup弹窗栈
+    private Stack<PopupUIBase> PopupUIStack = new Stack<PopupUIBase>();
     
     // 弹窗Mask 
     private PopupMask _popupMask;
@@ -28,6 +28,7 @@ public class UIManager : Single<UIManager>
         if (ShowUIList.ContainsKey(uIData.Type))
         {
             Log($"{uIData.Type} UI已经打开了");
+            return;
         }
         
         UIBase ui = GetUI(uIData);
@@ -53,7 +54,9 @@ public class UIManager : Single<UIManager>
                     break;
             }
             ShowUIList.Add(uIData.Type, ui);
+            ui.m_data = uIData;
             ui.transform.SetAsLastSibling();
+            ui.Show(data);
         }
         else
         {
@@ -63,7 +66,37 @@ public class UIManager : Single<UIManager>
 
     public void HideUI(UIData uIData)
     {
+        UIBase ui;
+        if (!ShowUIList.TryGetValue(uIData.Type,out ui))
+        {
+            Log($"{uIData.Type} UI当前不存在");
+            return;
+        }
 
+        if (ui != null)
+        {
+            ui.Hide();
+            ShowUIList.Remove(uIData.Type);
+            switch (ui.m_hierarchy)
+            {
+                case eUIHierarchy.Resident:
+                    ResidentUIBase residentUI = ui as ResidentUIBase;
+                    if (residentUI != null) HideResidentUI(residentUI);
+                    break;
+                case eUIHierarchy.Common:
+                    CommonUIBase commonUI = ui as CommonUIBase;
+                    if (commonUI != null) HideCommonUI(commonUI);
+                    break;
+                case eUIHierarchy.Popup:
+                    PopupUIBase popupUI = ui as PopupUIBase;
+                    if (popupUI != null) HidePopupUI(popupUI);
+                    break;
+                case eUIHierarchy.Tips:
+                    TipsUIBase tipsUI = ui as TipsUIBase;
+                    if (tipsUI != null) HideTipsUI(tipsUI);
+                    break;
+            }
+        }
     }
 
     public bool GetUIIsShow(UIData uIData)
@@ -137,6 +170,8 @@ public class UIManager : Single<UIManager>
         {
             case ePopupMaskClickFun.Close:
             {
+                if (PopupUIStack.Count > 0)
+                    HideUI(PopupUIStack.Peek().m_data);
                 break;
             }
             case ePopupMaskClickFun.Mask:
@@ -161,6 +196,12 @@ public class UIManager : Single<UIManager>
     private void ShowPopupUI(PopupUIBase ui)
     {
         GetPopupMask().Show(ui.MaskType,ui.MaskClickFun);
+        if (PopupUIStack.Count > 0)
+        {
+            if (ui.PopupPattern == ePopupUIPattern.Sole) PopupUIStack.Peek().Hide();
+        }
+
+        PopupUIStack.Push(ui);
     }
     private void ShowTipsUI(TipsUIBase ui)
     {
@@ -172,9 +213,28 @@ public class UIManager : Single<UIManager>
     private void HideCommonUI(CommonUIBase ui)
     {
     }
+
     private void HidePopupUI(PopupUIBase ui)
     {
+        PopupUIBase h_ui = PopupUIStack.Pop();
+        if (ui.name != h_ui.name) LogError("弹窗队列有误");
+
+        if (PopupUIStack.Count > 0)
+        {
+            PopupUIBase s_ui = PopupUIStack.Peek();
+            if (ui.PopupPattern == ePopupUIPattern.Sole)
+            {
+                s_ui.Show();
+            }
+            GetPopupMask().Show(s_ui.MaskType, s_ui.MaskClickFun);
+            s_ui.transform.SetAsLastSibling();
+        }
+        else
+        {
+            GetPopupMask().Hide();
+        }
     }
+
     private void HideTipsUI(TipsUIBase ui)
     {
     }
@@ -194,5 +254,9 @@ public class UIManager : Single<UIManager>
     private void Log(string msg)
     {
         DebugEr.Log($"UIManegr >> {msg}");
+    }
+    private void LogError(string msg)
+    {
+        DebugEr.LogError($"UIManegr >> {msg}");
     }
 }

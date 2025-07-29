@@ -37,12 +37,18 @@ public class PopupMask : MonoBehaviour
 
     public void Show(ePopupMaskType maskType, ePopupMaskClickFun clickFun)
     {
+        transform.SetActiveEx(true);
         _maskType = maskType;
         _clickFun = clickFun;
         // 处理显示层级
         SetPopupMaskType();
         // 处理按钮事件
         SetPopupMaskClickFun();
+    }
+
+    public void Hide()
+    {
+        transform.SetActiveEx(false);
     }
     private void SetPopupMaskType()
     {
