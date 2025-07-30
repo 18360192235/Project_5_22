@@ -12,6 +12,9 @@ public class UIManager : Single<UIManager>
 
     // popup弹窗栈
     private Stack<PopupUIBase> PopupUIStack = new Stack<PopupUIBase>();
+
+    // 当前常规界面
+    private CommonUIBase _nowCommonUIBase;
     
     // 弹窗Mask 
     private PopupMask _popupMask;
@@ -27,14 +30,14 @@ public class UIManager : Single<UIManager>
     {
         if (ShowUIList.ContainsKey(uIData.Type))
         {
-            Log($"{uIData.Type} UI已经打开了");
-            return;
+            Log($"{uIData.Type} UI重复开启");
+            // return;
         }
         
         UIBase ui = GetUI(uIData);
         if (null != ui)
         {
-            switch (ui.m_hierarchy)
+            switch (uIData.Hierarchy)
             {
                 case eUIHierarchy.Resident:
                     ResidentUIBase residentUI = ui as ResidentUIBase;
@@ -53,10 +56,7 @@ public class UIManager : Single<UIManager>
                     if (tipsUI != null) ShowTipsUI(tipsUI);
                     break;
             }
-            ShowUIList.Add(uIData.Type, ui);
-            ui.m_data = uIData;
-            ui.transform.SetAsLastSibling();
-            ui.Show(data);
+            ShowFunction(ui, data);
         }
         else
         {
@@ -75,9 +75,8 @@ public class UIManager : Single<UIManager>
 
         if (ui != null)
         {
-            ui.Hide();
-            ShowUIList.Remove(uIData.Type);
-            switch (ui.m_hierarchy)
+            HideFunction(ui);
+            switch (uIData.Hierarchy)
             {
                 case eUIHierarchy.Resident:
                     ResidentUIBase residentUI = ui as ResidentUIBase;
@@ -102,7 +101,7 @@ public class UIManager : Single<UIManager>
     public bool GetUIIsShow(UIData uIData)
     {
         // 返回该UI是否处于显示状态
-        return false; 
+        return ShowUIList.ContainsKey(uIData.Type); 
     }
 
 
@@ -125,6 +124,7 @@ public class UIManager : Single<UIManager>
                 if(null != uIBase)
                 {
                     UIPool.Add(uIData.Type, uIBase);
+                    uIBase.m_data = uIData;
                 }
                 else return null;
             }else return null;
@@ -192,16 +192,22 @@ public class UIManager : Single<UIManager>
     }
     private void ShowCommonUI(CommonUIBase ui)
     {
+        if (_nowCommonUIBase != null)
+        {
+            HideFunction(_nowCommonUIBase);
+        }
+        _nowCommonUIBase = ui;
+        ClearPopupStack();
     }
     private void ShowPopupUI(PopupUIBase ui)
     {
         GetPopupMask().Show(ui.MaskType,ui.MaskClickFun);
         if (PopupUIStack.Count > 0)
         {
-            if (ui.PopupPattern == ePopupUIPattern.Sole) PopupUIStack.Peek().Hide();
+            if (ui.PopupPattern == ePopupUIPattern.Sole) HideFunction(PopupUIStack.Peek());
         }
 
-        PopupUIStack.Push(ui);
+        PopupStackPush(ui);
     }
     private void ShowTipsUI(TipsUIBase ui)
     {
@@ -217,17 +223,16 @@ public class UIManager : Single<UIManager>
     private void HidePopupUI(PopupUIBase ui)
     {
         PopupUIBase h_ui = PopupUIStack.Pop();
-        if (ui.name != h_ui.name) LogError("弹窗队列有误");
+        if (ui.name != h_ui.name) LogError("HidePopupUI > 弹窗队列有误");
 
         if (PopupUIStack.Count > 0)
         {
             PopupUIBase s_ui = PopupUIStack.Peek();
             if (ui.PopupPattern == ePopupUIPattern.Sole)
             {
-                s_ui.Show();
+                GetPopupMask().Show(s_ui.MaskType, s_ui.MaskClickFun);
+                ShowFunction(s_ui);
             }
-            GetPopupMask().Show(s_ui.MaskType, s_ui.MaskClickFun);
-            s_ui.transform.SetAsLastSibling();
         }
         else
         {
@@ -241,6 +246,66 @@ public class UIManager : Single<UIManager>
     
     #endregion
 
+    /// <summary>
+    /// 实际显示函数
+    /// </summary>
+    private void ShowFunction(UIBase ui, params object[] data)
+    {
+        if(ui == null) return;
+        ShowUIList.TryAdd(ui.m_data.Type, ui);
+        ui.transform.SetAsLastSibling();
+        ui.Show(data);
+    }
+
+    /// <summary>
+    /// 实际隐藏函数
+    /// </summary>
+    private void HideFunction(UIBase ui)
+    {
+        if(ui == null) return;
+        ui.Hide();
+        ShowUIList.Remove(ui.m_data.Type);
+    }
+
+    /// <summary>
+    /// 添加弹窗栈 处理重复入栈问题
+    /// </summary>
+    /// <param name="ui"></param>
+    private void PopupStackPush(PopupUIBase ui)
+    {
+        if (PopupUIStack.Contains(ui))
+        {
+            var list = PopupUIStack.ToArray();
+            PopupUIStack.Clear();
+            for (int i = 0; i < list.Length; i++)
+            {
+                if (ui.m_data.Type != list[i].m_data.Type)
+                {
+                    PopupUIStack.Push(list[i]);
+                }
+            }
+        }
+        PopupUIStack.Push(ui);
+    }
+
+    /// <summary>
+    /// 清空弹窗栈并关闭所有弹窗
+    /// </summary>
+    private void ClearPopupStack()
+    {
+        while (PopupUIStack.Count > 0)
+        {
+            var ui = PopupUIStack.Pop();
+            if(ui != null)
+                HideFunction(ui);
+        }
+        GetPopupMask().Hide();
+    }
+    
+    /// <summary>
+    /// 获取弹窗遮罩
+    /// </summary>
+    /// <returns></returns>
     private PopupMask GetPopupMask()
     {
         if (null == _popupMask)

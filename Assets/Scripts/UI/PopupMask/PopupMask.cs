@@ -20,7 +20,7 @@ public class PopupMask : MonoBehaviour
         _image = transform.FindComponent<Image>("MaskBtn");
     }
 
-    private void Start()
+    private void OnEnable()
     {
         _button.AddOnClick(OnClick);
     }

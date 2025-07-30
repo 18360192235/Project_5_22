@@ -6,7 +6,6 @@ using UnityEngine;
 public class UIBase : MonoBehaviour
 {
     protected Transform m_panel;
-    [HideInInspector] public eUIHierarchy m_hierarchy;
     [HideInInspector] public UIData m_data;
 
     #region UI基础功能
@@ -65,8 +64,14 @@ public class UIBase : MonoBehaviour
     }
     private void Start()
     {
+        
+    }
+
+    private void OnEnable()
+    {
         AddEvent();
     }
+
     private void OnDisable()
     {
         RemoveEvent();

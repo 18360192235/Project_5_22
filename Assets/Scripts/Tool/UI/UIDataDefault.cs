@@ -8,7 +8,7 @@ using UnityEngine;
 public enum eUIHierarchy
 {
     Resident,   // 常驻UI 固定显示在最低层 且不会被关闭
-    Common,     // 通用UI 默认只能同时显示一个，并会互相排斥 
+    Common,     // 通用UI 默认只能同时显示一个，并会互相排斥 开启后会清空弹窗栈，并关闭所有弹窗
     Popup,      // 弹窗UI 可以存在与Common节点上，可以重叠也可以互斥
     Tips,       // 提示UI 最上层级，数量和存在不受限制
 }
