@@ -10,9 +10,14 @@ public class GameMain : MonoBehaviour
     public Transform m_tips;
 
 
+    public PlayDataCache playData;
+    
     private void PlayGame()
     {
+        InitCache();
+        InitCfg();
         InitManger();
+        InitSDK();
     }
     /// <summary>
     /// 模块初始化
@@ -22,7 +27,31 @@ public class GameMain : MonoBehaviour
         UIManager.Sing.Init();
         //CardManager.Sing.Init(); // 游戏系统 
     }
-    
+
+    /// <summary>
+    /// 初始化SDK
+    /// </summary>
+    private void InitSDK()
+    {
+        
+    }
+    /// <summary>
+    /// 初始化配置
+    /// </summary>
+    private void InitCfg()
+    {
+        
+    }
+
+    /// <summary>
+    /// 初始化缓存
+    /// </summary>
+    private void InitCache()
+    {
+        playData = new PlayDataCache();
+        playData.Value.playLevel += 1;
+        playData.OnSave();
+    }
 
 #region 生命周期函数
     private void Awake()
