@@ -12,6 +12,4 @@
 public class PlayDataInfo
 {
     public int playLevel;
-    public long gold;
-    public long diamond;
 }

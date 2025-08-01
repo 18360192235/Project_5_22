@@ -1,6 +1,7 @@
 ﻿public class GameDefault
 {
-    public const bool OpenLog = true;
+    public const bool OpenLog = true; // 是否开启Log日志
+    public const bool OpenGM = true; // 是否开启GM功能
 }
 
 /* 0.游戏简要说明

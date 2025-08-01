@@ -25,6 +25,7 @@ public class GameMain : MonoBehaviour
     private void InitManger()
     {
         UIManager.Sing.Init();
+        PropMgr.Sing.Init();
         //CardManager.Sing.Init(); // 游戏系统 
     }
 
@@ -58,6 +59,7 @@ public class GameMain : MonoBehaviour
     {
         instance = this;
         PlayGame();
+        DontDestroyOnLoad(gameObject);
     }
     private void Start()
     {
