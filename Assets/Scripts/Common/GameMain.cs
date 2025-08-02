@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameMain : MonoBehaviour
 {
     public static GameMain instance;
-
+    public static bool isDontDestroyOnLoad = false;
+    
     public Transform m_resident;
     public Transform m_common;
     public Transform m_popup;
@@ -58,12 +61,22 @@ public class GameMain : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        if (!isDontDestroyOnLoad)
+        {
+            DontDestroyOnLoad(gameObject);
+            isDontDestroyOnLoad = true;
+        }
+
         PlayGame();
-        DontDestroyOnLoad(gameObject);
     }
     private void Start()
     {
         UIManager.Sing.ShowUI(UIDataDefault.MainUI);
+    }
+
+    private void Update()
+    {
+        
     }
 
     private void OnDestroy()
