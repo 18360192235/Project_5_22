@@ -31,12 +31,12 @@ public class RoleUI : CommonUIBase
 
     private void ClickOpenRoleInfoBtn()
     {
-        UIManager.Sing.ShowUI(UIDataDefault.RoleInfoUI);
+        UIManager.single.ShowUI(UIDataDefault.RoleInfoUI);
     }
 
     private void ClickCloseBtn()
     {
-        UIManager.Sing.HideUI(m_data);
+        UIManager.single.HideUI(m_data);
     }
 
     public override void Show(params object[] data)

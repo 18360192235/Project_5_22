@@ -31,12 +31,12 @@ public class LevelUI : CommonUIBase
 
     private void ClickOpenLevelPlayBtn()
     {
-        UIManager.Sing.ShowUI(UIDataDefault.LevelPlayUI);
+        UIManager.single.ShowUI(UIDataDefault.LevelPlayUI);
     }
 
     private void ClickCloseBtn()
     {
-        UIManager.Sing.HideUI(m_data);
+        UIManager.single.HideUI(m_data);
     }
 
     public override void Show(params object[] data)

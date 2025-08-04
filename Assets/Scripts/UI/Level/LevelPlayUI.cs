@@ -30,12 +30,12 @@ public class LevelPlayUI : PopupUIBase
 
     private void ClickCloseBtn()
     {
-        UIManager.Sing.HideUI(m_data);
+        UIManager.single.HideUI(m_data);
     }
 
     private void ClickOpenRoleInfoBtn()
     {
-        UIManager.Sing.ShowUI(UIDataDefault.RoleInfoUI);
+        UIManager.single.ShowUI(UIDataDefault.RoleInfoUI);
     }
     public override void Show(params object[] data)
     {

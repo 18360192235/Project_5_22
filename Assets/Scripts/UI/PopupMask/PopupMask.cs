@@ -32,7 +32,7 @@ public class PopupMask : MonoBehaviour
 
     private void OnClick()
     {
-        UIManager.Sing.ClickPopupMask(_clickFun);
+        UIManager.single.ClickPopupMask(_clickFun);
     }
 
     public void Show(ePopupMaskType maskType, ePopupMaskClickFun clickFun)

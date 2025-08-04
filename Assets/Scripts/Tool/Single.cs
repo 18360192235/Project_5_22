@@ -2,7 +2,7 @@
 {
     private static T sin;
 
-    public static T Sing
+    public static T single
     {
         get
         {

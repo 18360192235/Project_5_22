@@ -32,12 +32,12 @@ public class MainUI : ResidentUIBase
     }
     private void OnClickRoleBtn()
     {
-        UIManager.Sing.ShowUI(UIDataDefault.RoleUI);
+        UIManager.single.ShowUI(UIDataDefault.RoleUI);
     }
 
     private void OnClickLevelBtn()
     {
-        UIManager.Sing.ShowUI(UIDataDefault.LevelUI);
+        UIManager.single.ShowUI(UIDataDefault.LevelUI);
     }
 
     public override void RemoveEvent()

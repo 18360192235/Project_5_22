@@ -27,8 +27,8 @@ public class GameMain : MonoBehaviour
     /// </summary>
     private void InitManger()
     {
-        UIManager.Sing.Init();
-        PropMgr.Sing.Init();
+        UIManager.single.Init();
+        PropMgr.single.Init();
         //CardManager.Sing.Init(); // 游戏系统 
     }
 
@@ -71,7 +71,7 @@ public class GameMain : MonoBehaviour
     }
     private void Start()
     {
-        UIManager.Sing.ShowUI(UIDataDefault.MainUI);
+        UIManager.single.ShowUI(UIDataDefault.MainUI);
     }
 
     private void Update()

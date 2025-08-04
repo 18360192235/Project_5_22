@@ -37,22 +37,22 @@ public class RoleInfoUI : PopupUIBase
     }
     private void ClickOpenLevelPlayBtn()
     {
-        UIManager.Sing.ShowUI(UIDataDefault.LevelPlayUI);
+        UIManager.single.ShowUI(UIDataDefault.LevelPlayUI);
     }
 
     private void ClickOpenRoleBtnBtn()
     {
-        UIManager.Sing.ShowUI(UIDataDefault.RoleUI);
+        UIManager.single.ShowUI(UIDataDefault.RoleUI);
     }
     
     private void ClickOpenLevelBtnBtn()
     {
-        UIManager.Sing.ShowUI(UIDataDefault.LevelUI);
+        UIManager.single.ShowUI(UIDataDefault.LevelUI);
     }
 
     private void ClickCloseBtn()
     {
-        UIManager.Sing.HideUI(m_data);
+        UIManager.single.HideUI(m_data);
     }
 
     public override void Show(params object[] data)
