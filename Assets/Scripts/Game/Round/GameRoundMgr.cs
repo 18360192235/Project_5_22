@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 public enum RoundOperationType
 {
     None = 0, // 异常不处理
@@ -10,49 +12,67 @@ public enum RoundOperationType
 }
 public class GameRoundMgr : Single<GameRoundMgr>
 {
-}
+    private List<RoundItemBase> roundItems = new List<RoundItemBase>();
+    // 一名单位对应行动条的一个单位 行动条上不会同时存在相同的两个单位
+    // 单位进场时添加 离场时移除 
+    // 现在需要一个储存方式可以快速重新排列行动条
+#region 对外接口
 
-/// <summary>
-/// 回合数据基类 一个单位只有一个回合基类
-/// 提供回合信息
-/// 以及到回合时主动发送消息进行通知
-/// </summary>
-public abstract class RoundItemBase
-{
-    public long roundId; // 回合ID
-    public long roleId; // 角色ID
-    public long roundValue; // 回合行动值
+    /// <summary>
+    /// 添加回合单位
+    /// 传入单位信息
+    /// </summary>
+    /// <param name="item"></param>
+    public void AddUnit()
+    {
+        // 查询单位信息后传入内部接口
+        //AddRoundItem();
+    }
+
+    /// <summary>
+    /// 移除回合单位
+    /// 传入单位id
+    /// </summary>
+    /// <param name="item"></param>
+    public void RemoveUnit()
+    {
+        // 查询单位信息后传入内部接口
+        //RemoveRoundItem();
+    }
+
+    /// <summary>
+    /// 回合结束
+    /// </summary>
+    public void RoundEnd()
+    {
+        
+    }
+    
+#endregion
+    
     
     /// <summary>
-    /// 扣减行动值（行动提前）
+    /// 添加回合单位
     /// </summary>
-    /// <param name="type"></param>
-    /// <param name="value"></param>
-    public virtual void OnReduceRoundValue(RoundOperationType type,long value)
+    /// <param name="item"></param>
+    private void AddRoundItem(RoundItemBase item)
     {
-        // 减少回合值 行动值小于等于0会进行行动
-        // 这里可以添加具体的逻辑
+        
     }
-
     /// <summary>
-    /// 添加行动值（行动延后）
+    /// 移除回合单位
     /// </summary>
-    /// <param name="type"></param>
-    /// <param name="value"></param>
-    public virtual void OnAddRoundValue(RoundOperationType type, long value)
+    /// <param name="item"></param>
+    private void RemoveRoundItem(RoundItemBase item)
     {
-        // 减少回合值 行动值小于等于0会进行行动
-        // 这里可以添加具体的逻辑
+        
     }
-
+    
     /// <summary>
-    /// 回合结束时调用 根据角色信息重新获取行动值并插入行动队列
-    /// 额外回合不重置行动值
+    /// 进入下一回合
     /// </summary>
-    public abstract void OnRoundEnd();
-
-    /// <summary>
-    /// 回合开始
-    /// </summary>
-    public abstract void OnRoundStart();
+    private void NextRound()
+    {
+        
+    }
 }

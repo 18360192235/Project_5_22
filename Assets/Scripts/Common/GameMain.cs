@@ -44,7 +44,7 @@ public class GameMain : MonoBehaviour
     /// </summary>
     private void InitCfg()
     {
-        
+        ConfigMgr.Init();
     }
 
     /// <summary>
