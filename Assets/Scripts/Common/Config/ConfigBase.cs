@@ -9,6 +9,17 @@ public abstract class ConfigBase<T>
     protected string defaultValue = "{}";
     protected T _data;
 
+    public T Data
+    {
+        get
+        {
+            if (_data == null)
+            {
+                Init();
+            }
+            return _data;
+        }
+    }
     /// <summary>
     /// 初始化配置
     /// </summary>
